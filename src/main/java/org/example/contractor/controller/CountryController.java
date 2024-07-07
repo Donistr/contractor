@@ -1,7 +1,7 @@
 package org.example.contractor.controller;
 
 import org.example.contractor.dto.CountryDTO;
-import org.example.contractor.dto.ResponseObject;
+import org.example.contractor.messages.ResponseObject;
 import org.example.contractor.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

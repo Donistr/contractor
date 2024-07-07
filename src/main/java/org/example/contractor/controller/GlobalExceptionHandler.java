@@ -1,6 +1,6 @@
 package org.example.contractor.controller;
 
-import org.example.contractor.dto.ErrorObject;
+import org.example.contractor.messages.ErrorObject;
 import org.example.contractor.exception.BaseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

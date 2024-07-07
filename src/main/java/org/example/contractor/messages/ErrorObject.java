@@ -1,4 +1,4 @@
-package org.example.contractor.dto;
+package org.example.contractor.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

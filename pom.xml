@@ -40,6 +40,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.example</groupId>
             <artifactId>auditlib-spring-boot-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>

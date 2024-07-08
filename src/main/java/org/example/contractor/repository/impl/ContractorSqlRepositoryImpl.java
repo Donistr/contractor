@@ -29,6 +29,7 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
             contractor.setName(rs.getString("name"));
             contractor.setFullName(rs.getString("name_full"));
             contractor.setOgrn(rs.getString("ogrn"));
+            contractor.setInn(rs.getString("inn"));
 
             CountryDTO country = new CountryDTO();
             country.setId(rs.getString("country"));

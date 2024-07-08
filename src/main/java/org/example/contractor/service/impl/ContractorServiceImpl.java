@@ -1,6 +1,9 @@
 package org.example.contractor.service.impl;
 
-import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Predicate;
 import org.example.contractor.dto.ContractorDTO;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
@@ -11,6 +14,7 @@ import org.example.contractor.exception.ContractorNotFoundException;
 import org.example.contractor.mapper.ContractorMapper;
 import org.example.contractor.messages.SearchContractorRequest;
 import org.example.contractor.repository.ContractorRepository;
+import org.example.contractor.repository.ContractorSqlRepository;
 import org.example.contractor.service.ContractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -27,11 +31,14 @@ public class ContractorServiceImpl implements ContractorService {
 
     private final ContractorRepository repository;
 
+    private final ContractorSqlRepository sqlRepository;
+
     private final ContractorMapper mapper;
 
     @Autowired
-    public ContractorServiceImpl(ContractorRepository repository, ContractorMapper mapper) {
+    public ContractorServiceImpl(ContractorRepository repository, ContractorSqlRepository sqlRepository, ContractorMapper mapper) {
         this.repository = repository;
+        this.sqlRepository = sqlRepository;
         this.mapper = mapper;
     }
 
@@ -76,6 +83,11 @@ public class ContractorServiceImpl implements ContractorService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ContractorDTO> getContractorsSql(SearchContractorRequest request, Pageable pageable) {
+        return sqlRepository.findAll(request, pageable);
+    }
+
     private Specification<Contractor> createSpecification(SearchContractorRequest request) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -111,7 +123,7 @@ public class ContractorServiceImpl implements ContractorService {
     }
 
     private static void addEqualPredicate(List<Predicate> predicates, Root<Contractor> root,
-                                               CriteriaBuilder criteriaBuilder, String field, String value) {
+                                          CriteriaBuilder criteriaBuilder, String field, String value) {
         if (value == null) {
             return;
         }

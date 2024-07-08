@@ -7,7 +7,14 @@ import org.example.contractor.service.ContractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -41,8 +48,13 @@ public class ContractorController {
     @PostMapping("/search")
     public ResponseEntity<List<ContractorDTO>> getContractors(@RequestBody SearchContractorRequest request,
                                                               Pageable pageable) {
-        System.out.println(request);
         return ResponseEntity.ok(contractorService.getContractors(request, pageable));
+    }
+
+    @PostMapping("/search_sql")
+    public ResponseEntity<List<ContractorDTO>> getContractorsSql(@RequestBody SearchContractorRequest request,
+                                                              Pageable pageable) {
+        return ResponseEntity.ok(contractorService.getContractorsSql(request, pageable));
     }
 
 }

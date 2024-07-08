@@ -16,4 +16,6 @@ public interface ContractorService {
 
     List<ContractorDTO> getContractors(SearchContractorRequest request, Pageable pageable);
 
+    List<ContractorDTO> getContractorsSql(SearchContractorRequest request, Pageable pageable);
+
 }

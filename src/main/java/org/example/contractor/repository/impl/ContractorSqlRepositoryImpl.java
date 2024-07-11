@@ -24,25 +24,25 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
         @Override
         public ContractorDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
             ContractorDTO contractor = new ContractorDTO();
-            contractor.setId(rs.getString("id"));
-            contractor.setParentId(rs.getString("parent_id"));
-            contractor.setName(rs.getString("name"));
-            contractor.setFullName(rs.getString("name_full"));
-            contractor.setOgrn(rs.getString("ogrn"));
-            contractor.setInn(rs.getString("inn"));
+            contractor.setId(rs.getString("contractor_id"));
+            contractor.setParentId(rs.getString("contractor_parent_id"));
+            contractor.setName(rs.getString("contractor_name"));
+            contractor.setFullName(rs.getString("contractor_name_full"));
+            contractor.setOgrn(rs.getString("contractor_ogrn"));
+            contractor.setInn(rs.getString("contractor_inn"));
 
             CountryDTO country = new CountryDTO();
-            country.setId(rs.getString("country"));
+            country.setId(rs.getString("country_id"));
             country.setName(rs.getString("country_name"));
             contractor.setCountry(country);
 
             IndustryDTO industry = new IndustryDTO();
-            industry.setId(rs.getInt("industry"));
+            industry.setId(rs.getInt("industry_id"));
             industry.setName(rs.getString("industry_name"));
             contractor.setIndustry(industry);
 
             OrgFormDTO orgForm = new OrgFormDTO();
-            orgForm.setId(rs.getInt("org_form"));
+            orgForm.setId(rs.getInt("org_form_id"));
             orgForm.setName(rs.getString("org_form_name"));
             contractor.setOrgForm(orgForm);
 
@@ -52,13 +52,17 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
     }
 
     private static final String FIND_ACTIVE_CONTRACTORS = """
-            SELECT *, country.name AS country_name, industry.name AS industry_name, org_form.name AS org_form_name\s
-            FROM contractor\s
-            LEFT JOIN country country ON contractor.country = country.id\s
-            LEFT JOIN industry industry ON contractor.industry = industry.id\s
-            LEFT JOIN org_form org_form ON contractor.org_form = org_form.id\s
+            SELECT contractor.id AS contractor_id, contractor.parent_id AS contractor_parent_id,
+            contractor.name AS contractor_name, contractor.name_full AS contractor_name_full,
+            contractor.ogrn AS contractor_ogrn, contractor.inn AS contractor_inn,
+            country.id AS country_id, country.name AS country_name, industry.id AS industry_id,
+            industry.name AS industry_name, org_form.id AS org_form_id, org_form.name AS org_form_name
+            FROM contractor
+            LEFT JOIN country country ON contractor.country = country.id
+            LEFT JOIN industry industry ON contractor.industry = industry.id
+            LEFT JOIN org_form org_form ON contractor.org_form = org_form.id
             WHERE contractor.is_active = true
-           \s""";
+           """;
 
     private final JdbcTemplate jdbcTemplate;
 

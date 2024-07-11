@@ -10,20 +10,18 @@ public class CountryMapperImpl implements CountryMapper {
 
     @Override
     public Country map(CountryDTO countryDTO) {
-        Country result = new Country();
-        result.setId(countryDTO.getId());
-        result.setName(countryDTO.getName());
-
-        return result;
+        return Country.builder()
+                .id(countryDTO.getId())
+                .name(countryDTO.getName())
+                .build();
     }
 
     @Override
     public CountryDTO map(Country country) {
-        CountryDTO result = new CountryDTO();
-        result.setId(country.getId());
-        result.setName(country.getName());
-
-        return result;
+        return CountryDTO.builder()
+                .id(country.getId())
+                .name(country.getName())
+                .build();
     }
 
 }

@@ -6,7 +6,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -15,6 +18,9 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "contractor")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Contractor {
 
     @Id

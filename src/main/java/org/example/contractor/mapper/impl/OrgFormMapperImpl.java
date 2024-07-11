@@ -10,20 +10,18 @@ public class OrgFormMapperImpl implements OrgFormMapper {
 
     @Override
     public OrgForm map(OrgFormDTO orgFormDTO) {
-        OrgForm result = new OrgForm();
-        result.setId(orgFormDTO.getId());
-        result.setName(orgFormDTO.getName());
-
-        return result;
+        return OrgForm.builder()
+                .id(orgFormDTO.getId())
+                .name(orgFormDTO.getName())
+                .build();
     }
 
     @Override
     public OrgFormDTO map(OrgForm orgForm) {
-        OrgFormDTO result = new OrgFormDTO();
-        result.setId(orgForm.getId());
-        result.setName(orgForm.getName());
-
-        return result;
+        return OrgFormDTO.builder()
+                .id(orgForm.getId())
+                .name(orgForm.getName())
+                .build();
     }
 
 }

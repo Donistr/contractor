@@ -27,34 +27,32 @@ public class ContractorMapperImpl implements ContractorMapper {
 
     @Override
     public Contractor map(ContractorDTO contractorDTO) {
-        Contractor result = new Contractor();
-        result.setId(contractorDTO.getId());
-        result.setParentId(contractorDTO.getParentId());
-        result.setName(contractorDTO.getName());
-        result.setFullName(contractorDTO.getFullName());
-        result.setInn(contractorDTO.getInn());
-        result.setOgrn(contractorDTO.getOgrn());
-        result.setCountry(countryMapper.map(contractorDTO.getCountry()));
-        result.setIndustry(industryMapper.map(contractorDTO.getIndustry()));
-        result.setOrgForm(orgFormMapper.map(contractorDTO.getOrgForm()));
-
-        return result;
+        return Contractor.builder()
+                .id(contractorDTO.getId())
+                .parentId(contractorDTO.getParentId())
+                .name(contractorDTO.getName())
+                .fullName(contractorDTO.getFullName())
+                .inn(contractorDTO.getInn())
+                .ogrn(contractorDTO.getOgrn())
+                .country(countryMapper.map(contractorDTO.getCountry()))
+                .industry(industryMapper.map(contractorDTO.getIndustry()))
+                .orgForm(orgFormMapper.map(contractorDTO.getOrgForm()))
+                .build();
     }
 
     @Override
     public ContractorDTO map(Contractor contractor) {
-        ContractorDTO result = new ContractorDTO();
-        result.setId(contractor.getId());
-        result.setParentId(contractor.getParentId());
-        result.setName(contractor.getName());
-        result.setFullName(contractor.getFullName());
-        result.setInn(contractor.getInn());
-        result.setOgrn(contractor.getOgrn());
-        result.setCountry(countryMapper.map(contractor.getCountry()));
-        result.setIndustry(industryMapper.map(contractor.getIndustry()));
-        result.setOrgForm(orgFormMapper.map(contractor.getOrgForm()));
-
-        return result;
+        return ContractorDTO.builder()
+                .id(contractor.getId())
+                .parentId(contractor.getParentId())
+                .name(contractor.getName())
+                .fullName(contractor.getFullName())
+                .inn(contractor.getInn())
+                .ogrn(contractor.getOgrn())
+                .country(countryMapper.map(contractor.getCountry()))
+                .industry(industryMapper.map(contractor.getIndustry()))
+                .orgForm(orgFormMapper.map(contractor.getOrgForm()))
+                .build();
     }
 
 }

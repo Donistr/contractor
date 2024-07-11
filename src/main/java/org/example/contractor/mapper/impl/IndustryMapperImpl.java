@@ -10,20 +10,18 @@ public class IndustryMapperImpl implements IndustryMapper {
 
     @Override
     public Industry map(IndustryDTO industryDTO) {
-        Industry result = new Industry();
-        result.setId(industryDTO.getId());
-        result.setName(industryDTO.getName());
-
-        return result;
+        return Industry.builder()
+                .id(industryDTO.getId())
+                .name(industryDTO.getName())
+                .build();
     }
 
     @Override
     public IndustryDTO map(Industry industry) {
-        IndustryDTO result = new IndustryDTO();
-        result.setId(industry.getId());
-        result.setName(industry.getName());
-
-        return result;
+        return IndustryDTO.builder()
+                .id(industry.getId())
+                .name(industry.getName())
+                .build();
     }
 
 }

@@ -23,30 +23,30 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
 
         @Override
         public ContractorDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ContractorDTO contractor = new ContractorDTO();
-            contractor.setId(rs.getString("contractor_id"));
-            contractor.setParentId(rs.getString("contractor_parent_id"));
-            contractor.setName(rs.getString("contractor_name"));
-            contractor.setFullName(rs.getString("contractor_name_full"));
-            contractor.setOgrn(rs.getString("contractor_ogrn"));
-            contractor.setInn(rs.getString("contractor_inn"));
+            ContractorDTO.ContractorDTOBuilder contractorBuilder = ContractorDTO.builder()
+                    .id(rs.getString("contractor_id"))
+                    .parentId(rs.getString("contractor_parent_id"))
+                    .name(rs.getString("contractor_name"))
+                    .fullName(rs.getString("contractor_name_full"))
+                    .ogrn(rs.getString("contractor_ogrn"))
+                    .inn(rs.getString("contractor_inn"));
 
-            CountryDTO country = new CountryDTO();
-            country.setId(rs.getString("country_id"));
-            country.setName(rs.getString("country_name"));
-            contractor.setCountry(country);
+            CountryDTO.CountryDTOBuilder countryBuilder = CountryDTO.builder()
+                    .id(rs.getString("country_id"))
+                    .name(rs.getString("country_name"));
+            contractorBuilder.country(countryBuilder.build());
 
-            IndustryDTO industry = new IndustryDTO();
-            industry.setId(rs.getInt("industry_id"));
-            industry.setName(rs.getString("industry_name"));
-            contractor.setIndustry(industry);
+            IndustryDTO.IndustryDTOBuilder industryBuilder = IndustryDTO.builder()
+                    .id(rs.getInt("industry_id"))
+                    .name(rs.getString("industry_name"));
+            contractorBuilder.industry(industryBuilder.build());
 
-            OrgFormDTO orgForm = new OrgFormDTO();
-            orgForm.setId(rs.getInt("org_form_id"));
-            orgForm.setName(rs.getString("org_form_name"));
-            contractor.setOrgForm(orgForm);
+            OrgFormDTO.OrgFormDTOBuilder orgFormBuilder = OrgFormDTO.builder()
+                    .id(rs.getInt("org_form_id"))
+                    .name(rs.getString("org_form_name"));
+            contractorBuilder.orgForm(orgFormBuilder.build());
 
-            return contractor;
+            return contractorBuilder.build();
         }
 
     }

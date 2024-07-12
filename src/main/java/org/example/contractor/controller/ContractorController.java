@@ -1,6 +1,7 @@
 package org.example.contractor.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -60,6 +61,7 @@ public class ContractorController {
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ContractorDTO.class)) }
     )
+    @Parameter(description = "id контрагента")
     @GetMapping("/{id}")
     public ResponseEntity<ContractorDTO> getById(@PathVariable String id) {
         return ResponseEntity.ok(contractorService.getById(id));
@@ -74,6 +76,7 @@ public class ContractorController {
     @ApiResponse(responseCode = "200",
             content = { @Content }
     )
+    @Parameter(description = "id контрагента")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseObject> deleteById(@PathVariable String id) {
         contractorService.deleteById(id);

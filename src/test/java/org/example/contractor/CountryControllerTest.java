@@ -43,7 +43,7 @@ public class CountryControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getAll() throws Exception {
+    public void getAllCountriesTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/country/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -54,12 +54,20 @@ public class CountryControllerTest {
     }
 
     @Test
-    public void getById() throws Exception {
+    public void getCountryByIdOkSituationTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/country/ABH"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("ABH"))
                 .andExpect(jsonPath("$.name").value("Абхазия"));
+    }
+
+    @Test
+    public void getCountryByIdNotFoundSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/country/AAA"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("не найдена страна с id = AAA"));
     }
 
 }

@@ -52,7 +52,7 @@ public class ContractorControllerTest {
     private ObjectMapper mapper;
 
     @Test
-    public void getById() throws Exception {
+    public void getContractorByIdOkSituationTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/contractor/id_1"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -70,7 +70,15 @@ public class ContractorControllerTest {
     }
 
     @Test
-    public void getContractors() throws Exception {
+    public void getContractorByIdNotFoundSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/contractor/id_123"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("не найден контрагент с id = id_123"));
+    }
+
+    @Test
+    public void searchContractorsTest() throws Exception {
         SearchContractorRequest request = new SearchContractorRequest();
         request.setFullName("name_full_2");
         request.setInn("inn_2");
@@ -103,7 +111,7 @@ public class ContractorControllerTest {
     }
 
     @Test
-    public void getContractorsSql() throws Exception {
+    public void searchContractorsSqlTest() throws Exception {
         SearchContractorRequest request = new SearchContractorRequest();
         request.setFullName("name_full_1");
         request.setInn("inn_1");

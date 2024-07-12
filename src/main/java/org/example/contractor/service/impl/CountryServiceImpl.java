@@ -46,7 +46,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public CountryDTO getById(String id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
+                .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id = " + id)));
     }
 
     /**

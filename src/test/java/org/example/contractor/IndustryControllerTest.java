@@ -43,7 +43,7 @@ public class IndustryControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getAll() throws Exception {
+    public void getAllIndustriesTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/industry/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -54,12 +54,20 @@ public class IndustryControllerTest {
     }
 
     @Test
-    public void getById() throws Exception {
+    public void getIndustryByIdOkSituationTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/industry/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Авиастроение"));
+    }
+
+    @Test
+    public void getIndustryByIdNotFoundSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/industry/123"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("не найден индустриальный код с id = 123"));
     }
 
 }

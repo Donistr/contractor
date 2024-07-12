@@ -46,7 +46,7 @@ public class OrgFormServiceImpl implements OrgFormService {
     @Override
     public OrgFormDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new OrgFormNotFoundException("не найдена организационная форма с id " + id)));
+                .orElseThrow(() -> new OrgFormNotFoundException("не найдена организационная форма с id = " + id)));
     }
 
     /**

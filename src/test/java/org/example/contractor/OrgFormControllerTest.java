@@ -43,7 +43,7 @@ public class OrgFormControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getAll() throws Exception {
+    public void getAllOrgFormsTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/org_form/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -54,12 +54,20 @@ public class OrgFormControllerTest {
     }
 
     @Test
-    public void getById() throws Exception {
+    public void getOrgFormByIdOkSituationTest() throws Exception {
         mockMvc.perform(get("http://localhost:8080/org_form/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("-"));
+    }
+
+    @Test
+    public void getOrgFormByIdNotFoundSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/123"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("не найдена организационная форма с id = 123"));
     }
 
 }

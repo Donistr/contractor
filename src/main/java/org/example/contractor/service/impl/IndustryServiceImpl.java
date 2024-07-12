@@ -46,7 +46,7 @@ public class IndustryServiceImpl implements IndustryService {
     @Override
     public IndustryDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new IndustryNotFoundException("не найден индустриальный код с id " + id)));
+                .orElseThrow(() -> new IndustryNotFoundException("не найден индустриальный код с id = " + id)));
     }
 
     /**

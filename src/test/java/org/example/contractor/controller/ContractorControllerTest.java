@@ -1,4 +1,4 @@
-package org.example.contractor;
+package org.example.contractor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.contractor.dto.CountryDTO;

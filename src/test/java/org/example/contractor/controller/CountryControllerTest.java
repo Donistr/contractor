@@ -1,4 +1,4 @@
-package org.example.contractor;
+package org.example.contractor.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

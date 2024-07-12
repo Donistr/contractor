@@ -1,4 +1,4 @@
-package org.example.contractor;
+package org.example.contractor.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class IndustryControllerTest {
+public class OrgFormControllerTest {
 
     @Container
     private static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
@@ -43,31 +43,31 @@ public class IndustryControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getAllIndustriesTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/industry/all"))
+    public void getAllOrgFormsTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("Авиастроение"))
+                .andExpect(jsonPath("$[0].name").value("-"))
                 .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Автомобилестроение"));
+                .andExpect(jsonPath("$[1].name").value("Автономная некоммерческая организация"));
     }
 
     @Test
-    public void getIndustryByIdOkSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/industry/1"))
+    public void getOrgFormByIdOkSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Авиастроение"));
+                .andExpect(jsonPath("$.name").value("-"));
     }
 
     @Test
-    public void getIndustryByIdNotFoundSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/industry/123"))
+    public void getOrgFormByIdNotFoundSituationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/123"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("не найден индустриальный код с id = 123"));
+                .andExpect(jsonPath("$.error").value("не найдена организационная форма с id = 123"));
     }
 
 }

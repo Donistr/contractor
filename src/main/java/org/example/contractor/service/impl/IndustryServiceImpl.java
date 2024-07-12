@@ -2,7 +2,7 @@ package org.example.contractor.service.impl;
 
 import org.example.contractor.dto.IndustryDTO;
 import org.example.contractor.entity.Industry;
-import org.example.contractor.exception.CountryNotFoundException;
+import org.example.contractor.exception.IndustryNotFoundException;
 import org.example.contractor.mapper.IndustryMapper;
 import org.example.contractor.repository.IndustryRepository;
 import org.example.contractor.service.IndustryService;
@@ -46,7 +46,7 @@ public class IndustryServiceImpl implements IndustryService {
     @Override
     public IndustryDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
+                .orElseThrow(() -> new IndustryNotFoundException("не найдена страна с id " + id)));
     }
 
     /**

@@ -2,7 +2,7 @@ package org.example.contractor.service.impl;
 
 import org.example.contractor.dto.OrgFormDTO;
 import org.example.contractor.entity.OrgForm;
-import org.example.contractor.exception.CountryNotFoundException;
+import org.example.contractor.exception.OrgFormNotFoundException;
 import org.example.contractor.mapper.OrgFormMapper;
 import org.example.contractor.repository.OrgFormRepository;
 import org.example.contractor.service.OrgFormService;
@@ -46,7 +46,7 @@ public class OrgFormServiceImpl implements OrgFormService {
     @Override
     public OrgFormDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
+                .orElseThrow(() -> new OrgFormNotFoundException("не найдена страна с id " + id)));
     }
 
     /**

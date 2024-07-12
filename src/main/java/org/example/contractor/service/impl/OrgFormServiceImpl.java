@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Класс реализует интерфейс {@link OrgFormService}
+ */
 @Service
 public class OrgFormServiceImpl implements OrgFormService {
 
@@ -26,6 +29,9 @@ public class OrgFormServiceImpl implements OrgFormService {
         this.mapper = mapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrgFormDTO> getAll() {
         return repository.findAll()
@@ -34,12 +40,18 @@ public class OrgFormServiceImpl implements OrgFormService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrgFormDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrgFormDTO save(OrgFormDTO countryDTO) {
         OrgForm orgForm = mapper.map(countryDTO);
@@ -55,6 +67,9 @@ public class OrgFormServiceImpl implements OrgFormService {
         return mapper.map(repository.saveAndFlush(fromDatabase));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteById(Integer id) {
         repository.deleteById(id);

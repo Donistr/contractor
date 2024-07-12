@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Класс реализует интерфейс {@link CountryService}
+ */
 @Service
 public class CountryServiceImpl implements CountryService {
 
@@ -26,6 +29,9 @@ public class CountryServiceImpl implements CountryService {
         this.mapper = mapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CountryDTO> getAll() {
         return repository.findAll()
@@ -34,12 +40,18 @@ public class CountryServiceImpl implements CountryService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CountryDTO getById(String id) {
         return mapper.map(repository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CountryDTO save(CountryDTO countryDTO) {
         Country country = mapper.map(countryDTO);
@@ -55,6 +67,9 @@ public class CountryServiceImpl implements CountryService {
         return mapper.map(repository.saveAndFlush(fromDatabase));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteById(String id) {
         repository.deleteById(id);

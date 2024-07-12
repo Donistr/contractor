@@ -17,9 +17,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Класс реализует интерфейс {@link ContractorSqlRepository}
+ */
 @Repository
 public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
 
+    /**
+     * Утилитарный класс собирающий ContractorDTO из ResultSet-а
+     */
     private static class ContractorRowMapper implements RowMapper<ContractorDTO> {
 
         @Override
@@ -72,6 +78,9 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ContractorDTO> findAll(SearchContractorRequest request, Pageable pageable) {
         StringBuilder queryBuilder = new StringBuilder(FIND_ACTIVE_CONTRACTORS);
@@ -103,6 +112,13 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
         return jdbcTemplate.query(queryBuilder.toString(), params, new ContractorRowMapper());
     }
 
+    /**
+     * Добавляет в запрос условие equal
+     * @param queryBuilder query запроса
+     * @param params параметры запроса
+     * @param field поле, по которому добавляется условие
+     * @param value значение для поля
+     */
     private void addEqualCondition(StringBuilder queryBuilder, MapSqlParameterSource params, String field,
                                    Object value) {
         if (value == null) {
@@ -114,6 +130,13 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
         params.addValue(field.replace(".", "_"), value);
     }
 
+    /**
+     * Добавляет в запрос условие like
+     * @param queryBuilder query запроса
+     * @param params параметры запроса
+     * @param field поле, по которому добавляется условие
+     * @param value значение для поля
+     */
     private void addLikeCondition(StringBuilder queryBuilder, MapSqlParameterSource params, String field,
                                   String value) {
         if (value == null) {

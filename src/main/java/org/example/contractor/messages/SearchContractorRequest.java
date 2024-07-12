@@ -7,6 +7,9 @@ import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
 import org.example.contractor.dto.OrgFormDTO;
 
+/**
+ * Класс представляет запрос пользователя при поиске контрагента
+ */
 @Data
 public class SearchContractorRequest {
 

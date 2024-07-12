@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST контроллер для взаимодействия с индустриальными кодами
+ */
 @Tag(name = "api для взаимодействия с индустриальными кодами")
 @RestController
 @RequestMapping("/industry")
@@ -27,6 +30,10 @@ public class IndustryController {
         this.industryService = industryService;
     }
 
+    /**
+     * Получает список всех индустриальных кодов
+     * @return список всех индустриальных кодов
+     */
     @Operation(summary = "Получить список всех индустриальных кодов")
     @ApiResponse(responseCode = "200",
             description = "Список всех индустриальных кодов",
@@ -38,6 +45,11 @@ public class IndustryController {
         return ResponseEntity.ok(industryService.getAll());
     }
 
+    /**
+     * Находит индустриальный код по id
+     * @param id id индустриального кода
+     * @return найденный индустриальный код
+     */
     @Operation(summary = "Найти индустриальный код по id")
     @ApiResponse(responseCode = "200",
             description = "Найденный индустриальный код",
@@ -49,6 +61,11 @@ public class IndustryController {
         return ResponseEntity.ok(industryService.getById(id));
     }
 
+    /**
+     * Создает/изменяет индустриальный код
+     * @param countryDTO индустриальный код
+     * @return созданный/изменённый индустриальный код
+     */
     @Operation(summary = "Создать/изменить индустриальный код", description = "Если был передан id индустриального " +
             "кода, который уже создан, то он будет изменен, иначе создан")
     @ApiResponse(responseCode = "200",
@@ -61,6 +78,11 @@ public class IndustryController {
         return ResponseEntity.ok(industryService.save(countryDTO));
     }
 
+    /**
+     * Удаляет индустриальный код по id
+     * @param id id индустриального кода
+     * @return status code 200
+     */
     @Operation(summary = "Удалить индустриальный код по id")
     @ApiResponse(responseCode = "200",
             content = { @Content }

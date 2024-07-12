@@ -11,6 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity представляющее организационную форму
+ */
 @Entity
 @Table(name = "org_form")
 @Data

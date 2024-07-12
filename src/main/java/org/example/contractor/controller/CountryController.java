@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST контроллер для взаимодействия со странами
+ */
 @Tag(name = "api для взаимодействия со странами")
 @RestController
 @RequestMapping("/country")
@@ -27,6 +30,10 @@ public class CountryController {
         this.countryService = countryService;
     }
 
+    /**
+     * Получает список всех стран
+     * @return список всех стран
+     */
     @Operation(summary = "Получить список всех стран")
     @ApiResponse(responseCode = "200",
             description = "Список всех стран",
@@ -38,6 +45,11 @@ public class CountryController {
         return ResponseEntity.ok(countryService.getAll());
     }
 
+    /**
+     * Находит страну по id
+     * @param id id станы
+     * @return найденная страна
+     */
     @Operation(summary = "Найти страну по id")
     @ApiResponse(responseCode = "200",
             description = "Найденная страна",
@@ -49,6 +61,11 @@ public class CountryController {
         return ResponseEntity.ok(countryService.getById(id));
     }
 
+    /**
+     * Создает/изменяет страну
+     * @param countryDTO страна
+     * @return созданная/изменённая страна
+     */
     @Operation(summary = "Создать/изменить страну", description = "Если был передан id страны, которая уже создана, " +
             "то она будет изменена, иначе создана")
     @ApiResponse(responseCode = "200",
@@ -61,6 +78,11 @@ public class CountryController {
         return ResponseEntity.ok(countryService.save(countryDTO));
     }
 
+    /**
+     * Удаляет страну по id
+     * @param id id страны
+     * @return status code 200
+     */
     @Operation(summary = "Удалить страну по id")
     @ApiResponse(responseCode = "200",
             content = { @Content }

@@ -9,6 +9,9 @@ import org.example.contractor.mapper.OrgFormMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Реализует интерфейс {@link ContractorMapper}
+ */
 @Component
 public class ContractorMapperImpl implements ContractorMapper {
 
@@ -25,6 +28,9 @@ public class ContractorMapperImpl implements ContractorMapper {
         this.orgFormMapper = orgFormMapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Contractor map(ContractorDTO contractorDTO) {
         return Contractor.builder()
@@ -40,6 +46,9 @@ public class ContractorMapperImpl implements ContractorMapper {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ContractorDTO map(Contractor contractor) {
         return ContractorDTO.builder()

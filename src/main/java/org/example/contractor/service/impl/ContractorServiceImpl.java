@@ -2,8 +2,8 @@ package org.example.contractor.service.impl;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.example.contractor.dto.ContractorDTO;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Класс реализует интерфейс {@link ContractorService}
+ */
 @Service
 public class ContractorServiceImpl implements ContractorService {
 
@@ -42,6 +45,9 @@ public class ContractorServiceImpl implements ContractorService {
         this.mapper = mapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ContractorDTO save(ContractorDTO contractorDTO) {
         Contractor contractor = mapper.map(contractorDTO);
@@ -64,17 +70,26 @@ public class ContractorServiceImpl implements ContractorService {
         return mapper.map(repository.saveAndFlush(fromDatabase));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ContractorDTO getById(String id) {
         return mapper.map(repository.findById(id)
                 .orElseThrow(() -> new ContractorNotFoundException("not found contractor with id = " + id)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteById(String id) {
         repository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ContractorDTO> getContractors(SearchContractorRequest request, Pageable pageable) {
         return repository.findAll(createSpecification(request), pageable)
@@ -83,11 +98,19 @@ public class ContractorServiceImpl implements ContractorService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ContractorDTO> getContractorsSql(SearchContractorRequest request, Pageable pageable) {
         return sqlRepository.findAll(request, pageable);
     }
 
+    /**
+     * Создаёт спецификацию в соответствии с запросом
+     * @param request запрос
+     * @return спецификация
+     */
     private Specification<Contractor> createSpecification(SearchContractorRequest request) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -122,6 +145,14 @@ public class ContractorServiceImpl implements ContractorService {
         };
     }
 
+    /**
+     * Добавляет предикат equals в запрос
+     * @param predicates предикаты
+     * @param root root
+     * @param criteriaBuilder criteriaBuilder
+     * @param field поле
+     * @param value значение
+     */
     private static void addEqualPredicate(List<Predicate> predicates, Root<Contractor> root,
                                           CriteriaBuilder criteriaBuilder, String field, String value) {
         if (value == null) {
@@ -131,6 +162,14 @@ public class ContractorServiceImpl implements ContractorService {
         predicates.add(criteriaBuilder.equal(root.get(field), value));
     }
 
+    /**
+     * Добавляет предикат like в запрос
+     * @param predicates предикаты
+     * @param root root
+     * @param criteriaBuilder criteriaBuilder
+     * @param field поле
+     * @param value значение
+     */
     private static void addLikePredicate(List<Predicate> predicates, Root<Contractor> root,
                                          CriteriaBuilder criteriaBuilder, String field, String value) {
         if (value == null) {

@@ -15,6 +15,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 
 import java.time.ZonedDateTime;
 
+/**
+ * Entity представляющее контрагента
+ */
 @Entity
 @Table(name = "contractor")
 @Data

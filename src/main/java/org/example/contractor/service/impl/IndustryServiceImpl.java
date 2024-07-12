@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Класс реализует интерфейс {@link IndustryService}
+ */
 @Service
 public class IndustryServiceImpl implements IndustryService {
 
@@ -26,6 +29,9 @@ public class IndustryServiceImpl implements IndustryService {
         this.mapper = mapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<IndustryDTO> getAll() {
         return repository.findAll()
@@ -34,12 +40,18 @@ public class IndustryServiceImpl implements IndustryService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IndustryDTO getById(Integer id) {
         return mapper.map(repository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException("не найдена страна с id " + id)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IndustryDTO save(IndustryDTO countryDTO) {
         Industry industry = mapper.map(countryDTO);
@@ -55,6 +67,9 @@ public class IndustryServiceImpl implements IndustryService {
         return mapper.map(repository.saveAndFlush(fromDatabase));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteById(Integer id) {
         repository.deleteById(id);

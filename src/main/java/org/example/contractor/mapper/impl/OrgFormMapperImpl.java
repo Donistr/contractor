@@ -5,9 +5,15 @@ import org.example.contractor.entity.OrgForm;
 import org.example.contractor.mapper.OrgFormMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Реализация интерфейса {@link OrgFormMapper}
+ */
 @Component
 public class OrgFormMapperImpl implements OrgFormMapper {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrgForm map(OrgFormDTO orgFormDTO) {
         return OrgForm.builder()
@@ -16,6 +22,9 @@ public class OrgFormMapperImpl implements OrgFormMapper {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrgFormDTO map(OrgForm orgForm) {
         return OrgFormDTO.builder()

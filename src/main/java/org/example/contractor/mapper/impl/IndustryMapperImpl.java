@@ -5,9 +5,15 @@ import org.example.contractor.entity.Industry;
 import org.example.contractor.mapper.IndustryMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Реализует интерфейс {@link IndustryMapper}
+ */
 @Component
 public class IndustryMapperImpl implements IndustryMapper {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Industry map(IndustryDTO industryDTO) {
         return Industry.builder()
@@ -16,6 +22,9 @@ public class IndustryMapperImpl implements IndustryMapper {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IndustryDTO map(Industry industry) {
         return IndustryDTO.builder()

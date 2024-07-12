@@ -5,9 +5,15 @@ import org.example.contractor.entity.Country;
 import org.example.contractor.mapper.CountryMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Реализует интерфейс {@link CountryMapper}
+ */
 @Component
 public class CountryMapperImpl implements CountryMapper {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Country map(CountryDTO countryDTO) {
         return Country.builder()
@@ -16,6 +22,9 @@ public class CountryMapperImpl implements CountryMapper {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CountryDTO map(Country country) {
         return CountryDTO.builder()

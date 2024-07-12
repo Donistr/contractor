@@ -11,6 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity представляющее индустриальный код
+ */
 @Entity
 @Table(name = "industry")
 @Data

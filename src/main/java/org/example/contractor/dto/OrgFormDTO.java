@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * DTO представляющее организационную форму
+ */
 @Data
 @Builder
 public class OrgFormDTO {

@@ -76,7 +76,7 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public ContractorDTO getById(String id) {
         return mapper.map(repository.findById(id)
-                .orElseThrow(() -> new ContractorNotFoundException("not found contractor with id = " + id)));
+                .orElseThrow(() -> new ContractorNotFoundException("не найден контрагент с id = " + id)));
     }
 
     /**

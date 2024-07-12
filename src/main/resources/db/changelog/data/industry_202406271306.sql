@@ -1,4 +1,4 @@
-﻿INSERT INTO industry (id,"name") VALUES
+﻿INSERT INTO industry ("name") VALUES
 	 ('Авиастроение'),
 	 ('Автомобилестроение'),
 	 ('Автомобильный транспорт'),

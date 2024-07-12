@@ -1,4 +1,4 @@
-﻿INSERT INTO org_form (id,"name") VALUES
+﻿INSERT INTO org_form ("name") VALUES
 	 ('-'),
 	 ('Автономная некоммерческая организация'),
 	 ('Автономное учреждение'),

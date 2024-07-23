@@ -57,6 +57,9 @@ public class Contractor {
     @JoinColumn(name = "org_form")
     private OrgForm orgForm;
 
+    @Column(name = "active_main_borrower", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean activeMainBorrower = false;
+
     @Column(name = "create_date", nullable = false, updatable = false)
     private ZonedDateTime createDate;
 

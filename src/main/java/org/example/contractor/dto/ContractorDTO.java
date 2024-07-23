@@ -48,4 +48,8 @@ public class ContractorDTO {
     @Schema(description = "Организационная форма", example = "1")
     private OrgFormDTO orgForm;
 
+    @JsonProperty("active_main_borrower")
+    @Schema(description = "признак наличия сделок, где контрагент является основным заемщиком", example = "true")
+    private Boolean activeMainBorrower;
+
 }

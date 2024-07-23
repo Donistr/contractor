@@ -1,6 +1,7 @@
 package org.example.contractor.service;
 
 import org.example.contractor.dto.ContractorDTO;
+import org.example.contractor.dto.SetMainBorrowerDTO;
 import org.example.contractor.messages.SearchContractorRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -46,5 +47,12 @@ public interface ContractorService {
      * @return список контрагентов
      */
     List<ContractorDTO> getContractorsSql(SearchContractorRequest request, Pageable pageable);
+
+    /**
+     * Выставляет контрагенту признак наличия сделок, где он является основным заёмщиком
+     * @param setMainBorrowerDTO запрос
+     * @return контрагент
+     */
+    ContractorDTO setMainBorrower(SetMainBorrowerDTO setMainBorrowerDTO);
 
 }

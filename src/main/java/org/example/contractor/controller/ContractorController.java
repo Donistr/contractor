@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.contractor.dto.ContractorDTO;
+import org.example.contractor.dto.SetMainBorrowerDTO;
 import org.example.contractor.messages.ResponseObject;
 import org.example.contractor.messages.SearchContractorRequest;
 import org.example.contractor.service.ContractorService;
@@ -117,6 +118,22 @@ public class ContractorController {
     public ResponseEntity<List<ContractorDTO>> getContractorsSql(@RequestBody SearchContractorRequest request,
                                                               Pageable pageable) {
         return ResponseEntity.ok(contractorService.getContractorsSql(request, pageable));
+    }
+
+    /**
+     * Выставляет заданному контрагенту признак наличия сделок, где он является основным заёмщиком
+     * @param setMainBorrowerDTO запрос
+     * @return контрагент
+     */
+    @Operation(summary = "Установить контрагенту признак наличия сделок, где он является основным заёмщиком")
+    @ApiResponse(responseCode = "200",
+            description = "Контрагент с установленным признаком",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ContractorDTO.class)) }
+    )
+    @PatchMapping("/main-borrower")
+    public ResponseEntity<ContractorDTO> setMainBorrower(@RequestBody SetMainBorrowerDTO setMainBorrowerDTO) {
+        return ResponseEntity.ok(contractorService.setMainBorrower(setMainBorrowerDTO));
     }
 
 }

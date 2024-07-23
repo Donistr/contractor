@@ -8,8 +8,10 @@ import org.example.contractor.dto.ContractorDTO;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
 import org.example.contractor.dto.OrgFormDTO;
+import org.example.contractor.dto.SetMainBorrowerDTO;
 import org.example.contractor.entity.Contractor;
 import org.example.contractor.entity.Country;
+import org.example.contractor.exception.ActiveMainBorrowerNotDefinedException;
 import org.example.contractor.exception.ContractorNotFoundException;
 import org.example.contractor.mapper.ContractorMapper;
 import org.example.contractor.messages.SearchContractorRequest;
@@ -104,6 +106,26 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public List<ContractorDTO> getContractorsSql(SearchContractorRequest request, Pageable pageable) {
         return sqlRepository.findAll(request, pageable);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ContractorDTO setMainBorrower(SetMainBorrowerDTO setMainBorrowerDTO) {
+        if (setMainBorrowerDTO.getId() == null) {
+            throw new ContractorNotFoundException("не задан id контрагента");
+        }
+        if (setMainBorrowerDTO.getActiveMainBorrower() == null) {
+            throw new ActiveMainBorrowerNotDefinedException("не задано свойство active_main_borrower");
+        }
+
+        Contractor contractor = repository.findById(setMainBorrowerDTO.getId())
+                .orElseThrow(() -> new ContractorNotFoundException("не удалось найти контрагента с id " +
+                        setMainBorrowerDTO.getId()));
+
+        contractor.setActiveMainBorrower(setMainBorrowerDTO.getActiveMainBorrower());
+        return mapper.map(repository.saveAndFlush(contractor));
     }
 
     /**

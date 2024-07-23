@@ -43,6 +43,7 @@ public class ContractorMapperImpl implements ContractorMapper {
                 .country(countryMapper.map(contractorDTO.getCountry()))
                 .industry(industryMapper.map(contractorDTO.getIndustry()))
                 .orgForm(orgFormMapper.map(contractorDTO.getOrgForm()))
+                .activeMainBorrower(contractorDTO.getActiveMainBorrower())
                 .build();
     }
 
@@ -61,6 +62,7 @@ public class ContractorMapperImpl implements ContractorMapper {
                 .country(countryMapper.map(contractor.getCountry()))
                 .industry(industryMapper.map(contractor.getIndustry()))
                 .orgForm(orgFormMapper.map(contractor.getOrgForm()))
+                .activeMainBorrower(contractor.getActiveMainBorrower())
                 .build();
     }
 

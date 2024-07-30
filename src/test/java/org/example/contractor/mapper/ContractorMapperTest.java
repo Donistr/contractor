@@ -75,6 +75,7 @@ public class ContractorMapperTest {
                 .country(countryDTO)
                 .industry(industryDTO)
                 .orgForm(orgFormDTO)
+                .activeMainBorrower(true)
                 .build();
 
         Contractor contractor = contractorMapper.map(contractorDTO);
@@ -91,6 +92,7 @@ public class ContractorMapperTest {
         Assertions.assertEquals(contractorDTO.getIndustry().getName(), contractor.getIndustry().getName());
         Assertions.assertEquals(contractorDTO.getOrgForm().getId(), contractor.getOrgForm().getId());
         Assertions.assertEquals(contractorDTO.getOrgForm().getName(), contractor.getOrgForm().getName());
+        Assertions.assertEquals(contractorDTO.getActiveMainBorrower(), contractor.getActiveMainBorrower());
     }
 
     @Test
@@ -120,6 +122,7 @@ public class ContractorMapperTest {
                 .country(country)
                 .industry(industry)
                 .orgForm(orgForm)
+                .activeMainBorrower(false)
                 .build();
 
         ContractorDTO contractorDTO = contractorMapper.map(contractor);
@@ -136,6 +139,7 @@ public class ContractorMapperTest {
         Assertions.assertEquals(contractorDTO.getIndustry().getName(), contractor.getIndustry().getName());
         Assertions.assertEquals(contractorDTO.getOrgForm().getId(), contractor.getOrgForm().getId());
         Assertions.assertEquals(contractorDTO.getOrgForm().getName(), contractor.getOrgForm().getName());
+        Assertions.assertEquals(contractorDTO.getActiveMainBorrower(), contractor.getActiveMainBorrower());
     }
 
 }

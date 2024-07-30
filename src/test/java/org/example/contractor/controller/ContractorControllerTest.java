@@ -3,6 +3,7 @@ package org.example.contractor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
+import org.example.contractor.dto.SetMainBorrowerDTO;
 import org.example.contractor.messages.SearchContractorRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -21,6 +23,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -141,6 +144,54 @@ public class ContractorControllerTest {
                 .andExpect(jsonPath("$[0].industry.name").value("Авиастроение"))
                 .andExpect(jsonPath("$[0].org_form.id").value(2))
                 .andExpect(jsonPath("$[0].org_form.name").value("Автономная некоммерческая организация"));
+    }
+
+    @Test
+    @DirtiesContext
+    public void setMainBorrowerTest() throws Exception {
+        SetMainBorrowerDTO request = SetMainBorrowerDTO.builder()
+                .id("id_1")
+                .activeMainBorrower(false)
+                .build();
+        mockMvc.perform(patch("http://localhost:8080/contractor/main-borrower")
+                    .content(mapper.writeValueAsString(request))
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("id_1"))
+                .andExpect(jsonPath("$.name").value("name_1"))
+                .andExpect(jsonPath("$.name_full").value("name_full_1"))
+                .andExpect(jsonPath("$.inn").value("inn_1"))
+                .andExpect(jsonPath("$.ogrn").value("ogrn_1"))
+                .andExpect(jsonPath("$.country.id").value("ABH"))
+                .andExpect(jsonPath("$.country.name").value("Абхазия"))
+                .andExpect(jsonPath("$.industry.id").value(1))
+                .andExpect(jsonPath("$.industry.name").value("Авиастроение"))
+                .andExpect(jsonPath("$.org_form.id").value(2))
+                .andExpect(jsonPath("$.org_form.name").value("Автономная некоммерческая организация"))
+                .andExpect(jsonPath("$.active_main_borrower").value(false));
+
+        request = SetMainBorrowerDTO.builder()
+                .id("id_1")
+                .activeMainBorrower(true)
+                .build();
+        mockMvc.perform(patch("http://localhost:8080/contractor/main-borrower")
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("id_1"))
+                .andExpect(jsonPath("$.name").value("name_1"))
+                .andExpect(jsonPath("$.name_full").value("name_full_1"))
+                .andExpect(jsonPath("$.inn").value("inn_1"))
+                .andExpect(jsonPath("$.ogrn").value("ogrn_1"))
+                .andExpect(jsonPath("$.country.id").value("ABH"))
+                .andExpect(jsonPath("$.country.name").value("Абхазия"))
+                .andExpect(jsonPath("$.industry.id").value(1))
+                .andExpect(jsonPath("$.industry.name").value("Авиастроение"))
+                .andExpect(jsonPath("$.org_form.id").value(2))
+                .andExpect(jsonPath("$.org_form.name").value("Автономная некоммерческая организация"))
+                .andExpect(jsonPath("$.active_main_borrower").value(true));
     }
 
 }

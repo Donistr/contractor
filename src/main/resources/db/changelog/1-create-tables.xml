@@ -56,6 +56,9 @@
             <column name="country" type="text"/>
             <column name="industry" type="int4"/>
             <column name="org_form" type="int4"/>
+            <column name="active_main_borrower" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
             <column name="create_date" type="timestamp" defaultValue="now()">
                 <constraints nullable="false"/>
             </column>

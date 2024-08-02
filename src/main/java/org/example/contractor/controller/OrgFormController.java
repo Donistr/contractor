@@ -12,6 +12,7 @@ import org.example.contractor.messages.ResponseObject;
 import org.example.contractor.service.OrgFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,10 @@ public class OrgFormController {
                     array = @ArraySchema(schema = @Schema(implementation = OrgFormDTO.class))) }
     )
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<List<OrgFormDTO>> getAll() {
         return ResponseEntity.ok(orgFormService.getAll());
     }
@@ -65,6 +70,10 @@ public class OrgFormController {
     )
     @Parameter(description = "id организационной формы")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<OrgFormDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(orgFormService.getById(id));
     }
@@ -82,6 +91,8 @@ public class OrgFormController {
                     schema = @Schema(implementation = OrgFormDTO.class)) }
     )
     @PutMapping("/save")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<OrgFormDTO> createOrUpdate(@RequestBody OrgFormDTO countryDTO) {
         return ResponseEntity.ok(orgFormService.save(countryDTO));
     }
@@ -97,6 +108,8 @@ public class OrgFormController {
     )
     @Parameter(description = "id организационной формы")
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ResponseObject> deleteById(@PathVariable Integer id) {
         orgFormService.deleteById(id);
         return ResponseEntity.ok(new ResponseObject("success"));

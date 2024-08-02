@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.example.auth.role.RoleEnum;
 import org.example.contractor.dto.ContractorDTO;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
@@ -21,9 +22,13 @@ import org.example.contractor.service.ContractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +38,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ContractorServiceImpl implements ContractorService {
+
+    private static final GrantedAuthority CONTRACTOR_RUS_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.CONTRACTOR_RUS.getValue());
+
+    private static final GrantedAuthority CONTRACTOR_SUPERUSER_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.CONTRACTOR_SUPERUSER.getValue());
+
+    private static final GrantedAuthority SUPERUSER_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.SUPERUSER.getValue());
 
     private final ContractorRepository repository;
 
@@ -143,6 +154,12 @@ public class ContractorServiceImpl implements ContractorService {
             addLikePredicate(predicates, root, criteriaBuilder, "fullName", request.getFullName());
             addLikePredicate(predicates, root, criteriaBuilder, "inn", request.getInn());
             addLikePredicate(predicates, root, criteriaBuilder, "ogrn", request.getOgrn());
+
+            Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+            if (authorities.contains(CONTRACTOR_RUS_AUTHORITY) && !authorities.contains(CONTRACTOR_SUPERUSER_AUTHORITY)
+                    && !authorities.contains(SUPERUSER_AUTHORITY)) {
+                predicates.add(criteriaBuilder.equal(root.get("country").get("id"), "RUS"));
+            }
 
             CountryDTO country = request.getCountry();
             if (country != null) {

@@ -1,6 +1,10 @@
 package org.example.contractor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import org.example.auth.entity.User;
+import org.example.auth.jwt.JwtUtil;
+import org.example.auth.repository.UserRepository;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
 import org.example.contractor.dto.SetMainBorrowerDTO;
@@ -54,9 +58,36 @@ public class ContractorControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostConstruct
+    public void postConstruct() {
+        User user = userRepository.findByUsernameAndIsActiveTrue("USER").get();
+        userAccessToken = "Bearer " + jwtUtil.generateAccessToken(jwtUtil.generateRefreshToken(user), user);
+
+        user = userRepository.findByUsernameAndIsActiveTrue("CONTRACTOR_SUPERUSER").get();
+        contractorSuperuserAccessToken = "Bearer " + jwtUtil.generateAccessToken(jwtUtil.generateRefreshToken(user), user);
+
+        user = userRepository.findByUsernameAndIsActiveTrue("CONTRACTOR_RUS").get();
+        contractorRusAccessToken = "Bearer " + jwtUtil.generateAccessToken(jwtUtil.generateRefreshToken(user), user);
+    }
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    private static String userAccessToken;
+
+    private static String contractorSuperuserAccessToken;
+
+    private static String contractorRusAccessToken;
+
     @Test
     public void getContractorByIdOkSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/contractor/id_1"))
+        mockMvc.perform(get("http://localhost:8080/contractor/id_1")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("id_1"))
@@ -74,7 +105,8 @@ public class ContractorControllerTest {
 
     @Test
     public void getContractorByIdNotFoundSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/contractor/id_123"))
+        mockMvc.perform(get("http://localhost:8080/contractor/id_123")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("не найден контрагент с id = id_123"));
@@ -96,6 +128,7 @@ public class ContractorControllerTest {
         request.setIndustry(industryDTO);
 
         mockMvc.perform(post("http://localhost:8080/contractor/search")
+                        .header(AUTHORIZATION_HEADER, contractorSuperuserAccessToken)
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -114,6 +147,30 @@ public class ContractorControllerTest {
     }
 
     @Test
+    public void searchContractorsRusUserTest() throws Exception {
+        SearchContractorRequest request = new SearchContractorRequest();
+        request.setFullName("name_full_2");
+        request.setInn("inn_2");
+        CountryDTO countryDTO = CountryDTO.builder()
+                .name("руб")
+                .build();
+        request.setCountry(countryDTO);
+        IndustryDTO industryDTO = IndustryDTO.builder()
+                .id(2)
+                .name("Автомобилестроение")
+                .build();
+        request.setIndustry(industryDTO);
+
+        mockMvc.perform(post("http://localhost:8080/contractor/search")
+                        .header(AUTHORIZATION_HEADER, contractorRusAccessToken)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
     public void searchContractorsSqlTest() throws Exception {
         SearchContractorRequest request = new SearchContractorRequest();
         request.setFullName("name_full_1");
@@ -129,6 +186,7 @@ public class ContractorControllerTest {
         request.setIndustry(industryDTO);
 
         mockMvc.perform(post("http://localhost:8080/contractor/search_sql")
+                        .header(AUTHORIZATION_HEADER, contractorSuperuserAccessToken)
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -147,6 +205,30 @@ public class ContractorControllerTest {
     }
 
     @Test
+    public void searchContractorsSqlRusUserTest() throws Exception {
+        SearchContractorRequest request = new SearchContractorRequest();
+        request.setFullName("name_full_1");
+        request.setInn("inn_1");
+        CountryDTO countryDTO = CountryDTO.builder()
+                .name("хаз")
+                .build();
+        request.setCountry(countryDTO);
+        IndustryDTO industryDTO = IndustryDTO.builder()
+                .id(1)
+                .name("Авиастроение")
+                .build();
+        request.setIndustry(industryDTO);
+
+        mockMvc.perform(post("http://localhost:8080/contractor/search_sql")
+                        .header(AUTHORIZATION_HEADER, contractorRusAccessToken)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
     @DirtiesContext
     public void setMainBorrowerTest() throws Exception {
         SetMainBorrowerDTO request = SetMainBorrowerDTO.builder()
@@ -154,8 +236,9 @@ public class ContractorControllerTest {
                 .activeMainBorrower(false)
                 .build();
         mockMvc.perform(patch("http://localhost:8080/contractor/main-borrower")
-                    .content(mapper.writeValueAsString(request))
-                    .contentType(MediaType.APPLICATION_JSON))
+                        .header(AUTHORIZATION_HEADER, contractorSuperuserAccessToken)
+                        .content(mapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("id_1"))
@@ -176,6 +259,7 @@ public class ContractorControllerTest {
                 .activeMainBorrower(true)
                 .build();
         mockMvc.perform(patch("http://localhost:8080/contractor/main-borrower")
+                        .header(AUTHORIZATION_HEADER, contractorSuperuserAccessToken)
                         .content(mapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

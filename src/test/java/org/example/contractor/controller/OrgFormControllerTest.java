@@ -1,5 +1,9 @@
 package org.example.contractor.controller;
 
+import jakarta.annotation.PostConstruct;
+import org.example.auth.entity.User;
+import org.example.auth.jwt.JwtUtil;
+import org.example.auth.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +46,26 @@ public class OrgFormControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostConstruct
+    public void postConstruct() {
+        User user = userRepository.findByUsernameAndIsActiveTrue("USER").get();
+        userAccessToken = "Bearer " + jwtUtil.generateAccessToken(jwtUtil.generateRefreshToken(user), user);
+    }
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    private static String userAccessToken;
+
     @Test
     public void getAllOrgFormsTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/org_form/all"))
+        mockMvc.perform(get("http://localhost:8080/org_form/all")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -54,8 +75,16 @@ public class OrgFormControllerTest {
     }
 
     @Test
+    public void getAllOrgFormsNoAuthorizationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/all"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void getOrgFormByIdOkSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/org_form/1"))
+        mockMvc.perform(get("http://localhost:8080/org_form/1")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -63,8 +92,16 @@ public class OrgFormControllerTest {
     }
 
     @Test
+    public void getOrgFormByIdNoAuthorizationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/org_form/1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void getOrgFormByIdNotFoundSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/org_form/123"))
+        mockMvc.perform(get("http://localhost:8080/org_form/123")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("не найдена организационная форма с id = 123"));

@@ -1,5 +1,6 @@
 package org.example.contractor.repository.impl;
 
+import org.example.auth.role.RoleEnum;
 import org.example.contractor.dto.ContractorDTO;
 import org.example.contractor.dto.CountryDTO;
 import org.example.contractor.dto.IndustryDTO;
@@ -11,10 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,6 +27,12 @@ import java.util.List;
  */
 @Repository
 public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
+
+    private static final GrantedAuthority CONTRACTOR_RUS_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.CONTRACTOR_RUS.getValue());
+
+    private static final GrantedAuthority CONTRACTOR_SUPERUSER_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.CONTRACTOR_SUPERUSER.getValue());
+
+    private static final GrantedAuthority SUPERUSER_AUTHORITY = new SimpleGrantedAuthority(RoleEnum.SUPERUSER.getValue());
 
     /**
      * Утилитарный класс собирающий ContractorDTO из ResultSet-а
@@ -92,6 +103,13 @@ public class ContractorSqlRepositoryImpl implements ContractorSqlRepository {
         addLikeCondition(queryBuilder, params, "contractor.name_full", request.getFullName());
         addLikeCondition(queryBuilder, params, "contractor.inn", request.getInn());
         addLikeCondition(queryBuilder, params, "contractor.ogrn", request.getOgrn());
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        if (authorities.contains(CONTRACTOR_RUS_AUTHORITY) && !authorities.contains(CONTRACTOR_SUPERUSER_AUTHORITY)
+                && !authorities.contains(SUPERUSER_AUTHORITY)) {
+            addEqualCondition(queryBuilder, params, "country.id", "RUS");
+        }
+
         CountryDTO country = request.getCountry();
         if (country != null) {
             addLikeCondition(queryBuilder, params, "country.name", country.getName());

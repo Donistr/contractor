@@ -7,4 +7,7 @@
 
     <include file="db/changelog/1-create-tables.xml"/>
     <include file="db/changelog/2-fill-tables.xml"/>
+
+    <include file="db/changelog/authlib-create-tables.xml"/>
+    <include file="db/changelog/authlib-fill-tables.xml"/>
 </databaseChangeLog>

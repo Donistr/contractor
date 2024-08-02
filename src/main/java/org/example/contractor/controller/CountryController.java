@@ -12,6 +12,7 @@ import org.example.contractor.messages.ResponseObject;
 import org.example.contractor.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,10 @@ public class CountryController {
                     array = @ArraySchema(schema = @Schema(implementation = CountryDTO.class))) }
     )
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<List<CountryDTO>> getAll() {
         return ResponseEntity.ok(countryService.getAll());
     }
@@ -65,6 +70,10 @@ public class CountryController {
     )
     @Parameter(description = "id страны")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<CountryDTO> getById(@PathVariable String id) {
         return ResponseEntity.ok(countryService.getById(id));
     }
@@ -82,6 +91,8 @@ public class CountryController {
                     schema = @Schema(implementation = CountryDTO.class)) }
     )
     @PutMapping("/save")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<CountryDTO> createOrUpdate(@RequestBody CountryDTO countryDTO) {
         return ResponseEntity.ok(countryService.save(countryDTO));
     }
@@ -97,6 +108,8 @@ public class CountryController {
     )
     @Parameter(description = "id страны")
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ResponseObject> deleteById(@PathVariable String id) {
         countryService.deleteById(id);
         return ResponseEntity.ok(new ResponseObject("success"));

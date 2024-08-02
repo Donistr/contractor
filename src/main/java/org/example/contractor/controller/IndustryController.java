@@ -12,6 +12,7 @@ import org.example.contractor.messages.ResponseObject;
 import org.example.contractor.service.IndustryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,10 @@ public class IndustryController {
                     array = @ArraySchema(schema = @Schema(implementation = IndustryDTO.class))) }
     )
     @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<List<IndustryDTO>> getAll() {
         return ResponseEntity.ok(industryService.getAll());
     }
@@ -65,6 +70,10 @@ public class IndustryController {
     )
     @Parameter(description = "id индустриального кода")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<IndustryDTO> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(industryService.getById(id));
     }
@@ -82,6 +91,8 @@ public class IndustryController {
                     schema = @Schema(implementation = IndustryDTO.class)) }
     )
     @PutMapping("/save")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<IndustryDTO> createOrUpdate(@RequestBody IndustryDTO countryDTO) {
         return ResponseEntity.ok(industryService.save(countryDTO));
     }
@@ -97,6 +108,8 @@ public class IndustryController {
     )
     @Parameter(description = "id индустриального кода")
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ResponseObject> deleteById(@PathVariable Integer id) {
         industryService.deleteById(id);
         return ResponseEntity.ok(new ResponseObject("success"));

@@ -15,6 +15,7 @@ import org.example.contractor.service.ContractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +56,8 @@ public class ContractorController {
                     schema = @Schema(implementation = ContractorDTO.class)) }
     )
     @PutMapping("/save")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ContractorDTO> createOrUpdate(@RequestBody ContractorDTO contractorDTO) {
         return ResponseEntity.ok(contractorService.save(contractorDTO));
     }
@@ -72,6 +75,10 @@ public class ContractorController {
     )
     @Parameter(description = "id контрагента")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).USER.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ContractorDTO> getById(@PathVariable String id) {
         return ResponseEntity.ok(contractorService.getById(id));
     }
@@ -87,6 +94,8 @@ public class ContractorController {
     )
     @Parameter(description = "id контрагента")
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ResponseObject> deleteById(@PathVariable String id) {
         contractorService.deleteById(id);
         return ResponseEntity.ok(new ResponseObject("success"));
@@ -105,6 +114,9 @@ public class ContractorController {
                     array = @ArraySchema(schema = @Schema(implementation = ContractorDTO.class))) }
     )
     @PostMapping("/search")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<List<ContractorDTO>> getContractors(@RequestBody SearchContractorRequest request,
                                                               Pageable pageable) {
         return ResponseEntity.ok(contractorService.getContractors(request, pageable));
@@ -123,6 +135,9 @@ public class ContractorController {
                     array = @ArraySchema(schema = @Schema(implementation = ContractorDTO.class))) }
     )
     @PostMapping("/search_sql")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_RUS.value, " +
+            "T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<List<ContractorDTO>> getContractorsSql(@RequestBody SearchContractorRequest request,
                                                               Pageable pageable) {
         return ResponseEntity.ok(contractorService.getContractorsSql(request, pageable));
@@ -140,6 +155,8 @@ public class ContractorController {
                     schema = @Schema(implementation = ContractorDTO.class)) }
     )
     @PatchMapping("/main-borrower")
+    @PreAuthorize("hasAnyAuthority(T(org.example.auth.role.RoleEnum).CONTRACTOR_SUPERUSER.value, " +
+            "T(org.example.auth.role.RoleEnum).SUPERUSER.value)")
     public ResponseEntity<ContractorDTO> setMainBorrower(@RequestBody SetMainBorrowerDTO setMainBorrowerDTO) {
         return ResponseEntity.ok(contractorService.setMainBorrower(setMainBorrowerDTO));
     }

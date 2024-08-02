@@ -1,5 +1,9 @@
 package org.example.contractor.controller;
 
+import jakarta.annotation.PostConstruct;
+import org.example.auth.entity.User;
+import org.example.auth.jwt.JwtUtil;
+import org.example.auth.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +46,26 @@ public class CountryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostConstruct
+    public void postConstruct() {
+        User user = userRepository.findByUsernameAndIsActiveTrue("USER").get();
+        userAccessToken = "Bearer " + jwtUtil.generateAccessToken(jwtUtil.generateRefreshToken(user), user);
+    }
+
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
+    private static String userAccessToken;
+
     @Test
     public void getAllCountriesTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/country/all"))
+        mockMvc.perform(get("http://localhost:8080/country/all")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("ABH"))
@@ -54,8 +75,16 @@ public class CountryControllerTest {
     }
 
     @Test
+    public void getAllCountriesNoAuthorizationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/country/all"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void getCountryByIdOkSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/country/ABH"))
+        mockMvc.perform(get("http://localhost:8080/country/ABH")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("ABH"))
@@ -63,8 +92,16 @@ public class CountryControllerTest {
     }
 
     @Test
+    public void getCountryByIdNoAuthorizationTest() throws Exception {
+        mockMvc.perform(get("http://localhost:8080/country/ABH"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void getCountryByIdNotFoundSituationTest() throws Exception {
-        mockMvc.perform(get("http://localhost:8080/country/AAA"))
+        mockMvc.perform(get("http://localhost:8080/country/AAA")
+                        .header(AUTHORIZATION_HEADER, userAccessToken))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("не найдена страна с id = AAA"));
